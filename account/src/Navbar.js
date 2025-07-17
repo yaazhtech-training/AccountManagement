@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { FaHome, FaInfoCircle, FaPhoneAlt, FaUpload, FaUserLock } from "react-icons/fa";
+import { FaHome, FaInfoCircle, FaPhoneAlt, FaUpload, FaUserLock, FaMoneyCheck } from "react-icons/fa";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -22,6 +22,9 @@ const Navbar = () => {
             </Link>
             <Link to="/upload" className="flex items-center gap-2 hover:text-gray-300">
               <FaUpload /> User Upload
+            </Link>
+            <Link to="/loan" className="flex items-center gap-2 hover:text-gray-300">
+              <FaMoneyCheck /> Loan
             </Link>
             <Link to="/contact" className="flex items-center gap-2 hover:text-gray-300">
               <FaPhoneAlt /> Contact
@@ -54,6 +57,9 @@ const Navbar = () => {
           </Link>
           <Link to="/upload" className="flex items-center gap-2 hover:text-gray-300">
             <FaUpload /> User Upload
+          </Link>
+          <Link to="/loan" className="flex items-center gap-2 hover:text-gray-300">
+            <FaMoneyCheck /> Loan
           </Link>
           <Link to="/contact" className="flex items-center gap-2 hover:text-gray-300">
             <FaPhoneAlt /> Contact
