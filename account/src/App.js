@@ -5,6 +5,7 @@ import Navbar from './Navbar';
 import Login from './components/Login';
 import SignUp from './components/SignUp';
 import ForgotPassword from './components/ForgotPassword';
+import OtpVerification from './components/OtpVerification';
 import Home from './components/Home';
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
       <Route path="/login" element={<Login />} />
       <Route path='/signup' element={<SignUp/>}/>
       <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/otp-verification" element={<OtpVerification />} />
       
      </Routes>
      </BrowserRouter>

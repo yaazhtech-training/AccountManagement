@@ -1,92 +1,107 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { User, Lock } from 'lucide-react';
-
+import { User, Mail, Lock } from 'lucide-react';
+import { motion } from 'framer-motion';
+import axios from 'axios';
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    alert('Login attempted!');
+
+    try {
+      const response = await axios.post('http://localhost:8070/account/api/login', {
+        email,
+        password,
+      });
+
+      if (response.status === 200) {
+        alert("🎉 Login successful!");
+        // Redirect or store token
+      }
+    } catch (error) {
+      alert("❌ Invalid email or password");
+      console.error(error);
+    }
   };
 
   return (
     <div
-      className="min-h-screen flex items-center justify-center bg-cover bg-center text-white font-sans"
+      className="min-h-screen flex items-center justify-center bg-cover bg-center px-4"
       style={{ backgroundImage: "url('/images/login-bg.jpg')" }}
-
     >
-      <div className="flex flex-col md:flex-row w-full max-w-5xl rounded-xl overflow-hidden shadow-2xl backdrop-blur-lg bg-purple-100 bg-opacity-60 border border-purple-300">
-        
-        {/* Left Side - Login Form */}
-        <div className="md:w-1/2 p-10 bg-white bg-opacity-40 text-gray-900">
-          <div className="flex flex-col items-center justify-center">
-            <div className="bg-purple-300 p-4 rounded-full mb-6">
-              <User className="w-8 h-8 text-purple-800" />
-            </div>
-            <h2 className="text-3xl font-bold mb-6">Login</h2>
-          </div>
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+        className="w-full max-w-4xl flex flex-col md:flex-row rounded-3xl shadow-2xl overflow-hidden bg-white bg-opacity-70 backdrop-blur-lg border border-purple-300"
+      >
+        {/* Left Section - Login Form */}
+        <div className="md:w-1/2 p-10 text-black">
+          <h2 className="text-3xl font-bold text-purple-800 mb-8 text-center">Login 🔐</h2>
 
           <form onSubmit={handleLogin} className="space-y-6">
             <div className="relative">
+              <Mail className="absolute left-3 top-3.5 text-purple-500 w-5 h-5" />
               <input
                 type="email"
-                placeholder="Email"
-                className="w-full px-10 py-3 rounded-md bg-white bg-opacity-80 text-gray-800 placeholder-gray-500 border border-purple-300 focus:outline-none focus:ring-2 focus:ring-purple-400"
+                placeholder="Email Address"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                className="w-full px-10 py-3 rounded-xl bg-white text-black border border-purple-300 focus:outline-none focus:ring-2 focus:ring-purple-400"
                 required
               />
-              <User className="absolute left-3 top-3.5 text-purple-400 w-5 h-5" />
             </div>
 
             <div className="relative">
+              <Lock className="absolute left-3 top-3.5 text-purple-500 w-5 h-5" />
               <input
                 type="password"
                 placeholder="Password"
-                className="w-full px-10 py-3 rounded-md bg-white bg-opacity-80 text-gray-800 placeholder-gray-500 border border-purple-300 focus:outline-none focus:ring-2 focus:ring-purple-400"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                className="w-full px-10 py-3 rounded-xl bg-white text-black border border-purple-300 focus:outline-none focus:ring-2 focus:ring-purple-400"
                 required
               />
-              <Lock className="absolute left-3 top-3.5 text-purple-400 w-5 h-5" />
             </div>
 
-            <div className="flex items-center justify-between text-sm text-gray-700">
-              <label className="flex items-center">
-                <input type="checkbox" className="mr-2" />
-                Remember me
-              </label>
-              <Link to="/forgot-password" className="text-purple-600 hover:underline">
-                Forgot password?
-              </Link>
+            <div className="flex justify-end text-sm text-purple-600 hover:underline">
+              <Link to="/forgot-password">Forgot Password?</Link>
             </div>
 
             <button
               type="submit"
-              className="w-full bg-purple-500 hover:bg-purple-600 transition duration-300 text-white font-semibold py-2 rounded-md"
+              className="w-full bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white font-semibold py-3 rounded-xl transition duration-300 shadow-md"
             >
-              LOGIN
+              Login
             </button>
           </form>
-        </div>
 
-        {/* Right Side - Welcome Message */}
-        <div className="md:w-1/2 p-10 flex flex-col justify-center bg-gradient-to-tr from-purple-200 via-pink-100 to-indigo-100 text-purple-900 text-center">
-          <h2 className="text-4xl font-extrabold mb-4">Welcome 🌸</h2>
-          <p className="text-lg">
-            Manage your account efficiently and securely with our Account Management System.
-          </p>
-          <p className="mt-6 text-sm">
-            New here?{' '}
-            <Link to="/signup" className="text-purple-700 hover:underline">
-              Sign up now
+          <p className="mt-6 text-sm text-center text-purple-700">
+            Don’t have an account?{' '}
+            <Link to="/signup" className="underline hover:text-purple-900">
+              Sign up here
             </Link>
           </p>
         </div>
-      </div>
+
+        {/* Right Section - Visual */}
+        <div className="md:w-1/2 p-10 bg-gradient-to-tr from-purple-100 via-pink-100 to-indigo-100 flex flex-col justify-center items-center text-center">
+          <motion.h2
+            initial={{ scale: 0.8 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 0.2, duration: 0.6 }}
+            className="text-4xl font-extrabold mb-4"
+          >
+            Welcome Back!
+          </motion.h2>
+          <p className="text-lg text-purple-800 font-medium">
+            Unlock your account and access all your data securely.
+          </p>
+        </div>
+      </motion.div>
     </div>
   );
 }
