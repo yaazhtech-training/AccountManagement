@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FaFacebook, FaLinkedin, FaInstagram, FaTwitter } from "react-icons/fa";
 
-const Footer = ({ children }) => {
+const Footer = () => {
   const [modalContent, setModalContent] = useState(null);
   const [modalTitle, setModalTitle] = useState("");
 
@@ -44,30 +44,7 @@ const Footer = ({ children }) => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen">
-      {/* Header */}
-      <header className="bg-gradient-to-r from-blue-400 to-blue-600 text-white p-4 shadow">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <h1 className="text-2xl font-bold">Bank Account Management</h1>
-          <nav>
-            <ul className="flex space-x-4 text-sm">
-              <li>
-                <button className="hover:underline">Home</button>
-              </li>
-              <li>
-                <button className="hover:underline">Services</button>
-              </li>
-              <li>
-                <button className="hover:underline">Login</button>
-              </li>
-            </ul>
-          </nav>
-        </div>
-      </header>
-
-      <main className="flex-grow">{children}</main>
-
-      {/* Footer */}
+    <>
       <footer className="bg-[#0a2342] text-white mt-10">
         <div className="max-w-7xl mx-auto py-8 px-4 grid grid-cols-1 md:grid-cols-4 gap-6 text-sm">
           <div>
@@ -176,7 +153,7 @@ const Footer = ({ children }) => {
           </div>
         )}
       </footer>
-    </div>
+    </>
   );
 };
 
