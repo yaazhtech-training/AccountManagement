@@ -7,7 +7,9 @@ import SignUp from './components/SignUp';
 import ForgotPassword from './components/ForgotPassword';
 import OtpVerification from './components/OtpVerification';
 import Home from './components/Home';
-
+import Userupload from './components/Userupload'; 
+import Contactus from './components/Contactus';
+import LoanSection from './components/LoanSection';
 function App() {
   return (
     <div className="App">
@@ -19,6 +21,10 @@ function App() {
       <Route path='/signup' element={<SignUp/>}/>
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/otp-verification" element={<OtpVerification />} />
+      <Route path='/upload' element={<Userupload/>}/>
+      <Route path='/loan' element={<LoanSection/>}/>
+      <Route path='/contact' element={<Contactus/>}/>
+
       
      </Routes>
      </BrowserRouter>
