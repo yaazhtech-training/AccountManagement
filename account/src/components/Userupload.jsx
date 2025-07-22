@@ -23,6 +23,20 @@ const Userupload = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // ✅ Validate phone number: must be exactly 10 digits
+    const phoneRegex = /^\d{10}$/;
+    if (!phoneRegex.test(formData.phoneNumber)) {
+      setStatus("❌ Phone number must be exactly 10 digits.");
+      return;
+    }
+
+    // ✅ Validate account number: optional, but if filled must be 8–16 digits
+    if (formData.accountNumber && !/^\d{8,16}$/.test(formData.accountNumber)) {
+      setStatus("❌ Account number must be between 8 to 16 digits.");
+      return;
+    }
+
     setStatus("Creating account...");
 
     try {
