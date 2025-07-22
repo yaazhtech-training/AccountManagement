@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import axios from 'axios';
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
@@ -11,22 +12,43 @@ const SignUp = () => {
   });
 
   const [message, setMessage] = useState('');
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log("Creating account and sending OTP to:", formData.email);
+    if (formData.password !== formData.confirmPassword) {
+      setError("❌ Passwords do not match.");
+      return;
+    }
 
-    setMessage("✅ Account created! Please verify your account through the email OTP.");
+    try {
+      // ✅ API call to backend to create user
+      const response = await axios.post("http://localhost:8081/account/auth/signup", {
+        userName: formData.userName,
+        email: formData.email,
+        password: formData.password,
+        phoneNumber: formData.phoneNumber
+      });
 
-    setTimeout(() => {
-      navigate('/otp-verification');
-    }, 2000);
+      if (response.status === 200) {
+        localStorage.setItem("otpEmail", formData.email);
+        setMessage("✅ Account created! Please verify using the OTP sent to your email.");
+        setTimeout(() => {
+          navigate('/otp-verification');
+        }, 2000);
+      } else {
+        setError("❌ Signup failed. Please try again.");
+      }
+    } catch (err) {
+      console.error("Signup error:", err);
+      setError("❌ Signup failed. Email may already exist or server error.");
+    }
   };
 
   return (
@@ -67,7 +89,6 @@ const SignUp = () => {
             Create Account
           </button>
 
-          {/* ✅ Login link */}
           <p className="text-center text-sm text-gray-700 mt-4">
             Already have an account?{' '}
             <Link to="/login" className="text-purple-600 font-semibold hover:underline">
@@ -75,9 +96,8 @@ const SignUp = () => {
             </Link>
           </p>
 
-          {message && (
-            <p className="text-center text-green-600 font-medium mt-4">{message}</p>
-          )}
+          {message && <p className="text-center text-green-600 font-medium mt-4">{message}</p>}
+          {error && <p className="text-center text-red-600 font-medium mt-4">{error}</p>}
         </form>
       </div>
     </div>

@@ -10,16 +10,21 @@ function ForgotPassword() {
   const [success, setSuccess] = useState('');
 
   const handleSendOtp = async (e) => {
-    e.preventDefault();
-    setError('');
-    try {
-      await axios.post('http://localhost:8080/api/auth/send-otp', { email });
-      setStep(2);
-      setSuccess('✅ OTP sent to your email successfully!');
-    } catch (err) {
-      setError('❌ Failed to send OTP. Please check your email and try again.');
-    }
-  };
+  e.preventDefault();
+  setError('');
+  try {
+    await axios.post('http://localhost:8080/api/auth/send-otp', { email });
+
+    // ✅ Store email in localStorage
+    localStorage.setItem("otpEmail", email);
+
+    setStep(2);
+    setSuccess('✅ OTP sent to your email successfully!');
+  } catch (err) {
+    setError('❌ Failed to send OTP. Please check your email and try again.');
+  }
+};
+
 
   const handleVerifyOtp = async (e) => {
     e.preventDefault();

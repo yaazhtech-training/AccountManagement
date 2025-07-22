@@ -7,10 +7,23 @@ const OtpVerification = () => {
   const [otp, setOtp] = useState('');
   const [message, setMessage] = useState('');
   const [status, setStatus] = useState('');
-  const [timeLeft, setTimeLeft] = useState(60); // 60 seconds timer
+  const [timeLeft, setTimeLeft] = useState(60);
   const navigate = useNavigate();
 
-  // Countdown effect
+  const email = localStorage.getItem("otpEmail");
+
+  useEffect(() => {
+    // ⛔ Redirect if no email found (user skipped signup/forgot)
+    if (!email) {
+      setMessage("⚠️ No email found. Please go back and start again.");
+      setStatus("error");
+
+      setTimeout(() => {
+        navigate("/signup"); // or "/forgot-password"
+      }, 3000);
+    }
+  }, [email, navigate]);
+
   useEffect(() => {
     if (timeLeft === 0) return;
 
@@ -21,31 +34,61 @@ const OtpVerification = () => {
     return () => clearInterval(timer);
   }, [timeLeft]);
 
-  const handleVerify = (e) => {
+  const handleVerify = async (e) => {
     e.preventDefault();
 
-    if (otp === '123456' && timeLeft > 0) {
-      setStatus('success');
-      setMessage('✅ OTP verification successful! Redirecting...');
+    try {
+      const response = await fetch("http://localhost:8080/api/auth/verify-otp", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, otp }),
+      });
 
-      setTimeout(() => {
-        navigate('/dashboard'); // change route as needed
-      }, 2000);
-    } else if (timeLeft <= 0) {
-      setStatus('error');
-      setMessage('⏰ OTP expired. Please request a new one.');
-    } else {
-      setStatus('error');
-      setMessage('❌ Invalid OTP. Please try again.');
+      const result = await response.json();
+
+      if (response.ok) {
+        setStatus("success");
+        setMessage("✅ OTP verification successful! Redirecting...");
+
+        setTimeout(() => {
+          navigate("/login"); // change as needed: "/dashboard", etc.
+        }, 2000);
+      } else {
+        setStatus("error");
+        setMessage(`❌ ${result.message}`);
+      }
+    } catch (error) {
+      setStatus("error");
+      setMessage("❌ Server error during OTP verification.");
     }
   };
 
-  const handleResendOtp = () => {
-    // Logic to resend OTP via email
-    console.log("Resending OTP to user email...");
-    setMessage("📧 A new OTP has been sent to your email.");
-    setStatus('info');
-    setTimeLeft(60); // reset timer
+  const handleResendOtp = async () => {
+    try {
+      const response = await fetch("http://localhost:8080/api/auth/resend-otp", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        setMessage("📧 A new OTP has been sent to your email.");
+        setStatus("info");
+        setTimeLeft(60);
+      } else {
+        setStatus("error");
+        setMessage(`❌ ${result.message}`);
+      }
+    } catch (error) {
+      setStatus("error");
+      setMessage("❌ Error resending OTP.");
+    }
   };
 
   return (
@@ -65,11 +108,8 @@ const OtpVerification = () => {
             />
           </div>
 
-          {/* Timer */}
           <div className="text-center text-gray-600 font-medium">
-            {timeLeft > 0
-              ? `⏱ OTP valid for: ${timeLeft} seconds`
-              : `❌ OTP expired`}
+            {timeLeft > 0 ? `⏱ OTP valid for: ${timeLeft} seconds` : `❌ OTP expired`}
           </div>
 
           <button
@@ -80,7 +120,6 @@ const OtpVerification = () => {
             Verify OTP
           </button>
 
-          {/* Resend OTP Button */}
           {timeLeft === 0 && (
             <button
               type="button"
@@ -91,12 +130,16 @@ const OtpVerification = () => {
             </button>
           )}
 
-          {/* Message Output */}
           {message && (
-            <p className={`text-sm text-center mt-4 font-medium ${
-              status === 'success' ? 'text-green-600' :
-              status === 'error' ? 'text-red-600' : 'text-blue-600'
-            }`}>
+            <p
+              className={`text-sm text-center mt-4 font-medium ${
+                status === 'success'
+                  ? 'text-green-600'
+                  : status === 'error'
+                  ? 'text-red-600'
+                  : 'text-blue-600'
+              }`}
+            >
               {message}
             </p>
           )}
