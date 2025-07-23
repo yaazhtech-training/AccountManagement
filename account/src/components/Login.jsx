@@ -2,25 +2,43 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { User, Lock } from 'lucide-react';
 
-
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    alert('Login attempted!');
+
+    // TODO: Replace with actual API call
+    try {
+      const response = await fetch('http://localhost:8081/account/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        localStorage.setItem('token', data.token);
+        alert('Login successful!');
+        // navigate to homepage or dashboard
+      } else {
+        alert('Login failed. Please check credentials.');
+      }
+    } catch (err) {
+      console.error('Login error:', err);
+      alert('Error connecting to server');
+    }
   };
 
   return (
     <div
       className="min-h-screen flex items-center justify-center bg-cover bg-center text-white font-sans"
       style={{ backgroundImage: "url('/images/login-bg.jpg')" }}
-
     >
       <div className="flex flex-col md:flex-row w-full max-w-5xl rounded-xl overflow-hidden shadow-2xl backdrop-blur-lg bg-purple-100 bg-opacity-60 border border-purple-300">
         
-        {/* Left Side - Login Form */}
+        {/* Left - Login Form */}
         <div className="md:w-1/2 p-10 bg-white bg-opacity-40 text-gray-900">
           <div className="flex flex-col items-center justify-center">
             <div className="bg-purple-300 p-4 rounded-full mb-6">
@@ -73,7 +91,7 @@ function Login() {
           </form>
         </div>
 
-        {/* Right Side - Welcome Message */}
+        {/* Right - Welcome Info */}
         <div className="md:w-1/2 p-10 flex flex-col justify-center bg-gradient-to-tr from-purple-200 via-pink-100 to-indigo-100 text-purple-900 text-center">
           <h2 className="text-4xl font-extrabold mb-4">Welcome 🌸</h2>
           <p className="text-lg">

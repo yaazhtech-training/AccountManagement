@@ -65,7 +65,9 @@ function SignUp() {
   }
 };
 
-const handleVerifyOtp = async () => {
+
+  // ✅ Step 2: Validate OTP
+  const handleVerifyOtp = async () => {
   if (!otp || !formData.email) {
     setError('Please enter the OTP.');
     return;
