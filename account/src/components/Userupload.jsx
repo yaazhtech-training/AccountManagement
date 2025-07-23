@@ -1,5 +1,4 @@
 import { useState } from "react";
-import axios from "axios";
 
 const Userupload = () => {
   const [formData, setFormData] = useState({
@@ -14,48 +13,31 @@ const Userupload = () => {
   });
 
   const [status, setStatus] = useState("");
-  const [account, setAccount] = useState(null);
+  const [accountCreated, setAccountCreated] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
-    // ✅ Validate phone number: must be exactly 10 digits
+    // Phone number validation
     const phoneRegex = /^\d{10}$/;
     if (!phoneRegex.test(formData.phoneNumber)) {
       setStatus("❌ Phone number must be exactly 10 digits.");
       return;
     }
 
-    // ✅ Validate account number: optional, but if filled must be 8–16 digits
+    // Account number validation (optional)
     if (formData.accountNumber && !/^\d{8,16}$/.test(formData.accountNumber)) {
       setStatus("❌ Account number must be between 8 to 16 digits.");
       return;
     }
 
-    setStatus("Creating account...");
-
-    try {
-      const res = await axios.post("http://localhost:5000/api/account/create", formData);
-      setAccount(res.data.account);
-      setStatus("✅ Account created successfully!");
-      setFormData({
-        userId: "",
-        name: "",
-        email: "",
-        phoneNumber: "",
-        accountType: "Savings",
-        accountNumber: "",
-        bankName: "",
-        branch: "",
-      });
-    } catch (error) {
-      setStatus("❌ Error: " + (error.response?.data?.error || error.message));
-    }
+    setStatus("✅ Account created successfully!");
+    setAccountCreated(true);
   };
 
   return (
@@ -63,12 +45,11 @@ const Userupload = () => {
       className="min-h-screen bg-cover bg-center p-4"
       style={{ backgroundImage: "url('/images/upload.jpg')" }}
     >
-      {!account && (
+      {!accountCreated ? (
         <div className="max-w-md mx-auto bg-white bg-opacity-90 shadow-md p-6 rounded-xl mt-8">
           <h2 className="text-xl font-bold mb-4 text-center">Account Creation Form</h2>
 
           <form onSubmit={handleSubmit} className="space-y-4">
-
             <div>
               <label className="block text-sm font-medium">Full Name</label>
               <input
@@ -170,6 +151,19 @@ const Userupload = () => {
           {status && (
             <div className="mt-4 text-sm text-center text-gray-700">{status}</div>
           )}
+        </div>
+      ) : (
+        <div className="max-w-md mx-auto bg-white bg-opacity-90 shadow-md p-6 rounded-xl mt-8 text-center">
+          <h2 className="text-xl font-bold mb-4">✅ Account Created Successfully!</h2>
+          <div className="text-left space-y-2">
+            <p><strong>Name:</strong> {formData.name}</p>
+            <p><strong>Email:</strong> {formData.email}</p>
+            <p><strong>Phone:</strong> {formData.phoneNumber}</p>
+            <p><strong>Account Type:</strong> {formData.accountType}</p>
+            <p><strong>Account Number:</strong> {formData.accountNumber || "(Auto-generated)"}</p>
+            <p><strong>Bank:</strong> {formData.bankName}</p>
+            <p><strong>Branch:</strong> {formData.branch}</p>
+          </div>
         </div>
       )}
     </div>
