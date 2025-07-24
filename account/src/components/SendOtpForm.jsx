@@ -9,7 +9,7 @@ const SendOtpForm = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post('http://localhost:8084/api/auth/send-otp', {
+      const response = await axios.post('http://localhost:8081/account/auth/send-otp', {
         email,
       });
       setMessage('✅ OTP sent successfully!');
