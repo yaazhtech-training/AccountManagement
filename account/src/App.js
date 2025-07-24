@@ -10,6 +10,7 @@ import Home from './components/Home';
 import Userupload from './components/Userupload'; 
 import Contactus from './components/Contactus';
 import LoanSection from './components/LoanSection';
+import AboutUs from './components/AboutUs';
 function App() {
   return (
     <div className="App">
@@ -22,10 +23,11 @@ function App() {
       <Route path="/otpverification" element={<OtpVerification />} />
 
       <Route path="/forgot-password" element={<ForgotPassword />} />
-      
       <Route path='/upload' element={<Userupload/>}/>
       <Route path='/loan' element={<LoanSection/>}/>
       <Route path='/contact' element={<Contactus/>}/>
+      <Route path="/about" element={<AboutUs />}/>
+
 
       
      </Routes>
