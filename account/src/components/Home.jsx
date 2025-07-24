@@ -154,6 +154,65 @@ const Home = () => {
             />
           ))}
         </div>
+
+        <div style={{
+          marginTop: '3rem',
+          padding: '2rem',
+          borderTop: '1px solid rgba(0, 0, 0, 0.1)',
+          display: 'flex',
+          flexWrap: 'wrap',
+          justifyContent: 'center',
+          gap: '1rem'
+        }}>
+          {[
+            { title: 'User Upload', icon: '📤', path: '/userupload' },
+            { title: 'Loan Services', icon: '💰', path: '/loan' },
+            { title: 'About Us', icon: 'ℹ️', path: '/about' },
+            { title: 'Contact', icon: '📞', path: '/contact' }
+          ].map((button, index) => (
+            <button
+              key={index}
+              onClick={() => window.location.href = button.path}
+              style={{
+                background: 'white',
+                border: '2px solid #4a90e2',
+                borderRadius: '12px',
+                padding: '1rem 1.5rem',
+                fontSize: '1rem',
+                fontWeight: '600',
+                color: '#4a90e2',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                transition: 'all 0.3s ease',
+                boxShadow: '0 4px 6px rgba(74, 144, 226, 0.1)',
+                minWidth: '180px',
+                justifyContent: 'center',
+                transform: 'translateY(0)',
+                ':hover': {
+                  transform: 'translateY(-2px)',
+                  boxShadow: '0 6px 12px rgba(74, 144, 226, 0.2)'
+                }
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = '0 6px 12px rgba(74, 144, 226, 0.2)';
+                e.currentTarget.style.background = '#4a90e2';
+                e.currentTarget.style.color = 'white';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 4px 6px rgba(74, 144, 226, 0.1)';
+                e.currentTarget.style.background = 'white';
+                e.currentTarget.style.color = '#4a90e2';
+              }}
+            >
+              <span style={{ fontSize: '1.2rem' }}>{button.icon}</span>
+              {button.title}
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   )
